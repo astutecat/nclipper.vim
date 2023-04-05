@@ -7,12 +7,7 @@ function! s:nclipper(with_filename)
   let max_len = len(end)
   let value = (a:with_filename ? @% . ":" . "\n" : '') .
         \ join(map(getline(begin, end), g:nclipper_format), "\n")
-  if has('xterm_clipboard')
-    call setreg('+', value, "V")
-  else
-    call setreg('"', value, "V")
-  endif
-
+  call setreg(g:nclipper_register, value, "V")
 endfunction
 
 vnoremap <silent> <Plug>(nclipper) :<C-u>call <SID>nclipper(0)<Cr>
@@ -26,4 +21,12 @@ endif
 if !exists('g:nclipper_format')
   " TODO: Support Funcref
   let g:nclipper_format = 'printf("%" . max_len . "d %s", v:key + begin, v:val)'
+endif
+
+if !exists('g:nclipper_register')
+  if has('xterm_clipboard') || has('NVIM')
+    let g:nclipper_register = '+'
+  else
+    let g:nclipper_register = '"'
+  endif
 endif
