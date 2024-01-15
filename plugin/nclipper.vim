@@ -1,7 +1,6 @@
 function! s:nclipper(with_filename)
   if visualmode() !=# 'V'
-    echoerr 'use V'
-    return
+    call feedkeys("V")
   endif
   let [begin, end] = [getpos("'<")[1], getpos("'>")[1]]
   let max_len = len(end)
